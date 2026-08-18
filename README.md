@@ -40,3 +40,22 @@ PodcastMind AI is a dark-theme intelligence dashboard designed to turn standard 
 
 3. **Open Browser**:
    Navigate to the local address displayed in the terminal (typically `http://localhost:5173`).
+
+  ---
+
+
+TERMINAL 1 - BACKEND:
+
+cd C:\Projects\PodcastMind-AI\backend
+
+python -m uvicorn app.main:app --reload --port 8000
+
+
+TERMINAL 2 - FRONTEND:
+
+cd C:\Projects\PodcastMind-AI\frontend
+
+npm run dev
+
+
+Keep BOTH terminals running.
