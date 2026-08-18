@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to PodcastMind AI — Log In or Sign Up</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Styling matched exactly with tailwind.config.js and index.css theme */
+    :root {
+      --background: #0D0D12;
+      --surface: #13131A;
+      --primary: #7B5EFF;
+      --secondary: #FF5E9C;
+      --text-primary: #FFFFFF;
+      --text-muted: #8888AA;
+      --success: #00E5A0;
+      --warning: #FF8C42;
+      --font-sans: 'Inter', sans-serif;
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient background glows */
+    .bg-glow-1 {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(123, 94, 255, 0.08) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(255, 94, 156, 0.08) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 580px;
+      padding: 24px;
+      z-index: 10;
+    }
+
+    /* Brand Header */
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(123, 94, 255, 0.3);
+    }
+
+    .brand-logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background-color: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #FFFFFF, #E2E8F0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Card Wrapper with Glassmorphism */
+    .card {
+      background: rgba(19, 19, 26, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    /* Progress bar wrapper */
+    .progress-container {
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-step-item {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-step-item.active {
+      color: var(--primary);
+    }
+
+    .progress-step-item.completed {
+      color: var(--success);
+    }
+
+    /* Steps Layout Container */
+    .steps-container {
+      position: relative;
+      min-height: 380px;
+      transition: min-height 0.4s ease;
+    }
+
+    .step-pane {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+    }
+
+    .step-pane.active {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+      position: relative;
+    }
+
+    /* Step Titles */
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    .step-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      background-color: #1A1A24;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: var(--font-sans);
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: rgba(123, 94, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba(123, 94, 255, 0.15);
+    }
+
+    /* Password strength bar styling */
+    .password-strength-container {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .password-strength-bar-track {
+      height: 4px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s, background-color 0.3s;
+    }
+
+    .password-strength-label {
+      font-size: 11px;
+      font-weight: 500;
+      text-align: right;
+      color: var(--text-muted);
+    }
+
+    /* Error Messages */
+    .error-msg {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--secondary);
+      min-height: 16px;
+      margin-top: -2px;
+      transition: opacity 0.2s;
+      opacity: 0;
+    }
+
+    .error-msg.visible {
+      opacity: 1;
+    }
+
+    /* Empty field shake animation */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .shake {
+      animation: shake 0.3s ease-in-out;
+    }
+
+    /* Selectable Cards (Role selection - Step 2) */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .role-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-card:hover {
+      border-color: rgba(123, 94, 255, 0.2);
+      background: rgba(123, 94, 255, 0.02);
+      transform: translateY(-2px);
+    }
+
+    .role-card.selected {
+      border-color: var(--primary);
+      background: rgba(123, 94, 255, 0.08);
+      box-shadow: 0 0 15px rgba(123, 94, 255, 0.15);
+    }
+
+    .role-icon {
+      font-size: 24px;
+    }
+
+    .role-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+
+    /* Pill multi-select (Category selection - Step 2) */
+    .pills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .pill {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      user-select: none;
+    }
+
+    .pill:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .pill.selected {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(123, 94, 255, 0.2);
+    }
+
+    /* Goals checklist */
+    .goals-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .goal-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 14px 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .goal-item:hover {
+      border-color: rgba(255, 94, 156, 0.2);
+      background: rgba(255, 94, 156, 0.02);
+    }
+
+    .goal-item.selected {
+      border-color: var(--secondary);
+      background: rgba(255, 94, 156, 0.08);
+      box-shadow: 0 0 12px rgba(255, 94, 156, 0.12);
+    }
+
+    .goal-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .goal-item.selected .goal-checkbox {
+      background: var(--secondary);
+      border-color: var(--secondary);
+    }
+
+    .goal-checkbox svg {
+      width: 12px;
+      height: 12px;
+      color: white;
+      display: none;
+    }
+
+    .goal-item.selected .goal-checkbox svg {
+      display: block;
+    }
+
+    .goal-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: white;
+    }
+
+    /* Limit helper */
+    .limit-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: -6px;
+      margin-bottom: 20px;
+    }
+
+    /* Textarea Character Counter */
+    .textarea-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .char-count {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Actions Panel / Navigation buttons */
+    .actions-panel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      flex: 1;
+      box-shadow: 0 0 15px rgba(123, 94, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-secondary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-text {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+
+    .btn-text:hover {
+      color: white;
+    }
+
+    /* Toggle prompt */
+    .toggle-prompt {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .toggle-prompt a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-prompt a:hover {
+      text-decoration: underline;
+    }
+
+    /* Success step panel styling */
+    .success-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .success-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 24px;
+      background: rgba(0, 229, 160, 0.1);
+      border: 1px solid rgba(0, 229, 160, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 0 0 25px rgba(0, 229, 160, 0.2);
+    }
+
+    .success-icon-wrap svg {
+      width: 36px;
+      height: 36px;
+      color: var(--success);
+    }
+
+    .glow-card {
+      background: rgba(0, 229, 160, 0.03);
+      border: 1px solid rgba(0, 229, 160, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      margin: 24px 0;
+      box-shadow: 0 0 20px rgba(0, 229, 160, 0.05);
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { border-color: rgba(0, 229, 160, 0.15); box-shadow: 0 0 20px rgba(0, 229, 160, 0.05); }
+      50% { border-color: rgba(0, 229, 160, 0.4); box-shadow: 0 0 30px rgba(0, 229, 160, 0.15); }
+    }
+
+    .glow-card h4 {
+      font-size: 15px;
+      color: white;
+      margin-bottom: 6px;
+      font-family: var(--font-heading);
+    }
+
+    .glow-card p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Confetti particles */
+    .confetti-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 580px) {
+      .card {
+        padding: 24px;
+      }
+      .role-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti" class="confetti-canvas"></canvas>
+
+  <div class="container">
+    <!-- Brand Header -->
+    <div class="brand-header">
+      <div class="brand-logo">
+        <div class="brand-logo-inner">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          </svg>
+        </div>
+      </div>
+      <h1 class="brand-title">PodcastMind AI</h1>
+    </div>
+
+    <!-- Registration/Login Card -->
+    <div class="card" id="formCard">
+      
+      <!-- Progress Bar (Steps Indicator) -->
+      <div class="progress-container" id="progressBarContainer">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <div class="progress-steps">
+          <span class="progress-step-item active" id="stepIndicator-1">Account</span>
+          <span class="progress-step-item" id="stepIndicator-2">Profile</span>
+          <span class="progress-step-item" id="stepIndicator-3">Goals</span>
+          <span class="progress-step-item" id="stepIndicator-4">Done</span>
+        </div>
+      </div>
+
+      <!-- Step Container -->
+      <div class="steps-container">
+
+        <!-- STEP 1 — Create Account -->
+        <div class="step-pane active" data-step="1">
+          <h2 class="step-title" id="paneTitle">Create Your Account</h2>
+          <p class="step-subtitle" id="paneSubtitle">Begin your journey in the AI podcast intelligence ecosystem.</p>
+          
+          <form id="step1Form" onsubmit="event.preventDefault();">
+            <div class="form-group" id="group-fullName">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" placeholder="Sarah Chen">
+              <span class="error-msg" id="error-fullName">Name is required</span>
+            </div>
+
+            <div class="form-group" id="group-email">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="sarah.chen@podcastmind.ai">
+              <span class="error-msg" id="error-email">Invalid email format</span>
+            </div>
+
+            <div class="form-group" id="group-password">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="••••••••">
+              <span class="error-msg" id="error-password">Password must be at least 8 characters</span>
+              
+              <!-- Strength Meter -->
+              <div class="password-strength-container" id="passwordStrengthBox">
+                <div class="password-strength-bar-track">
+                  <div class="password-strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="password-strength-label" id="strengthLabel">Strength: Empty</div>
+              </div>
+            </div>
+
+            <div class="form-group" id="group-confirmPassword">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" placeholder="••••••••">
+              <span class="error-msg" id="error-confirmPassword">Passwords do not match</span>
+            </div>
+          </form>
+        </div>
+
+        <!-- STEP 2 — Podcast Profile -->
+        <div class="step-pane" data-step="2">
+          <h2 class="step-title">Configure Your Profile</h2>
+          <p class="step-subtitle">Tell us about your background so we can tailor the dashboard layout.</p>
+
+          <div class="form-group">
+            <label>What type of podcaster are you?</label>
+            <div class="role-grid">
+              <div class="role-card" onclick="selectRole(this, 'creator')">
+                <span class="role-icon">🎙️</span>
+                <span class="role-name">Creator</span>
+              </div>
+              <div class="role-card" onclick="selectRole(this, 'listener')">
+                <span class="role-icon">🎧</span>
+                <span class="role-name">Listener</span>
+              </div>
+              <div class="role-card" onclick="selectRole(this, 'researcher')">
+                <span class="role-icon">📊</span>
+                <span class="role-name">Researcher</span>
+              </div>
+              <div class="role-card" onclick="selectRole(this, 'brand')">
+                <span class="role-icon">🏢</span>
+                <span class="role-name">Brand</span>
+              </div>
+            </div>
+            <span class="error-msg" id="error-role">Please select your role</span>
+          </div>
+
+          <div class="form-group">
+            <label>Your podcast categories</label>
+            <p class="step-subtitle" style="margin-bottom: 12px; font-size: 12px;">Select categories that represent your content or interest areas.</p>
+            <div class="pills-container" id="categoriesContainer">
+              <!-- Dynamically populated categories -->
+            </div>
+            <span class="error-msg" id="error-categories">Select at least one category</span>
+          </div>
+        </div>
+
+        <!-- STEP 3 — Goals & Motivation -->
+        <div class="step-pane" data-step="3">
+          <h2 class="step-title">Goals & Motivation</h2>
+          <p class="step-subtitle">Help us customize your workspace shortcuts and model training endpoints.</p>
+
+          <div class="form-group">
+            <label>What will you use PodcastMind AI for?</label>
+            <p class="limit-helper" id="goalsLimitHelper">Pick up to 3 options</p>
+            <div class="goals-grid" id="goalsContainer">
+              <!-- Dynamically populated goals -->
+            </div>
+            <span class="error-msg" id="error-goals">Please select 1 to 3 goals</span>
+          </div>
+
+          <div class="form-group" id="group-whyChose">
+            <div class="textarea-header">
+              <label for="whyChose">Why did you choose us?</label>
+              <span class="char-count" id="charCount">0 / 300</span>
+            </div>
+            <textarea id="whyChose" rows="3" maxlength="300" placeholder="I am looking to automate clip selection and extract emotion timeline summaries..." oninput="updateCharCount(this)"></textarea>
+            <span class="error-msg" id="error-whyChose">Please enter a short response</span>
+          </div>
+        </div>
+
+        <!-- STEP 4 — Success State -->
+        <div class="step-pane" data-step="4">
+          <div class="success-container">
+            <div class="success-icon-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            
+            <h2 class="step-title" id="welcomeUserHeader">Welcome, Sarah! 🎉</h2>
+            <p class="step-subtitle" style="margin-bottom: 8px;">Your custom PodcastMind intelligence sandbox is configured.</p>
+
+            <div class="glow-card">
+              <h4>✅ You can now upload your first podcast!</h4>
+              <p>Drag, drop, or specify audio streams inside the dashboard to run instant transcriptions, audio multiverse mapping, and clone voice twins.</p>
+            </div>
+
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+              <button class="btn btn-primary" onclick="completeRegistration(true)">🎙️ Upload My First Podcast</button>
+              <button class="btn btn-secondary" onclick="completeRegistration(false)">Explore Dashboard &rarr;</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Panel Buttons -->
+      <div class="actions-panel" id="actionsPanel">
+        <button class="btn btn-secondary" id="btnBack" onclick="handleBack()" style="visibility: hidden;">Back</button>
+        <button class="btn btn-primary" id="btnNext" onclick="handleNext()">Next</button>
+      </div>
+
+      <!-- Toggle Sign In Prompt -->
+      <div class="toggle-prompt" id="togglePrompt">
+        Already have an account? <a onclick="toggleMode()">Sign In</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    let isRegisterMode = true; // true = Register, false = Login
+    let selectedRole = "";
+    let selectedCategories = [];
+    let selectedGoals = [];
+
+    // Categories catalog
+    const CATEGORIES = [
+      "Technology & AI", "Business", "True Crime", "Health", 
+      "Education", "Comedy", "Science", "Sports", 
+      "Culture", "Entertainment"
+    ];
+
+    // Goals catalog
+    const GOALS = [
+      { id: "chat", label: "Chat with Podcasts" },
+      { id: "clips", label: "Viral Clips" },
+      { id: "insights", label: "Audience Insights" },
+      { id: "hub", label: "Knowledge Hub" },
+      { id: "twin", label: "AI Host Twin" },
+      { id: "emotion", label: "Emotion Timeline" }
+    ];
+
+    // Password strength colors/labels
+    const STRENGTH_LEVELS = [
+      { width: '0%', color: 'transparent', text: 'Strength: Empty' },
+      { width: '25%', color: 'var(--secondary)', text: 'Strength: Weak' },
+      { width: '50%', color: 'var(--warning)', text: 'Strength: Fair' },
+      { width: '75%', color: 'var(--primary)', text: 'Strength: Good' },
+      { width: '100%', color: 'var(--success)', text: 'Strength: Strong' }
+    ];
+
+    // Initialize inputs & dynamic elements on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check if session is already active. If yes, redirect to dashboard
+      if (localStorage.getItem('podcastmind_session')) {
+        window.location.href = '/';
+        return;
+      }
+
+      // Initialize categories selection pills
+      const catContainer = document.getElementById('categoriesContainer');
+      CATEGORIES.forEach(cat => {
+        const pill = document.createElement('div');
+        pill.className = 'pill';
+        pill.innerText = cat;
+        pill.onclick = () => toggleCategory(pill, cat);
+        catContainer.appendChild(pill);
+      });
+
+      // Initialize goals selections
+      const goalsContainer = document.getElementById('goalsContainer');
+      GOALS.forEach(goal => {
+        const div = document.createElement('div');
+        div.className = 'goal-item';
+        div.onclick = () => toggleGoal(div, goal.id);
+
+        div.innerHTML = `
+          <div class="goal-checkbox">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <span class="goal-label">${goal.label}</span>
+        `;
+        goalsContainer.appendChild(div);
+      });
+
+      // Monitor password strength indicator
+      const passwordInput = document.getElementById('password');
+      passwordInput.addEventListener('input', checkPasswordStrength);
+    });
+
+    // Check Password Strength
+    function checkPasswordStrength() {
+      const password = document.getElementById('password').value;
+      let score = 0;
+
+      if (!password) {
+        updateStrengthMeter(0);
+        return;
+      }
+
+      if (password.length >= 8) score++;
+      if (/[A-Z]/.test(password)) score++;
+      if (/[0-9]/.test(password)) score++;
+      if (/[^A-Za-z0-9]/.test(password)) score++;
+
+      // Minimum score calculation map
+      const levelIdx = Math.min(score, 4);
+      updateStrengthMeter(levelIdx + (password.length >= 8 ? 0 : -1 <= 0 ? 0 : 0)); // simple adjustment
+    }
+
+    function updateStrengthMeter(index) {
+      const idx = Math.max(0, Math.min(index, 4));
+      const bar = document.getElementById('strengthBar');
+      const label = document.getElementById('strengthLabel');
+      
+      bar.style.width = STRENGTH_LEVELS[idx].width;
+      bar.style.backgroundColor = STRENGTH_LEVELS[idx].color;
+      label.innerText = STRENGTH_LEVELS[idx].text;
+      
+      if (idx === 0) {
+        label.style.color = 'var(--text-muted)';
+      } else {
+        label.style.color = STRENGTH_LEVELS[idx].color;
+      }
+    }
+
+    // Characters counter for textarea
+    function updateCharCount(textarea) {
+      const count = textarea.value.length;
+      document.getElementById('charCount').innerText = `${count} / 300`;
+    }
+
+    // Role selection
+    function selectRole(element, role) {
+      document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      element.classList.add('selected');
+      selectedRole = role;
+      hideError('role');
+    }
+
+    // Category toggling
+    function toggleCategory(element, category) {
+      const index = selectedCategories.indexOf(category);
+      if (index === -1) {
+        selectedCategories.push(category);
+        element.classList.add('selected');
+      } else {
+        selectedCategories.splice(index, 1);
+        element.classList.remove('selected');
+      }
+      hideError('categories');
+    }
+
+    // Goals checking & selection (Max 3)
+    function toggleGoal(element, goalId) {
+      const index = selectedGoals.indexOf(goalId);
+      if (index === -1) {
+        if (selectedGoals.length >= 3) {
+          // Empty field shake animation for warning
+          const box = document.getElementById('goalsContainer');
+          box.classList.add('shake');
+          setTimeout(() => box.classList.remove('shake'), 300);
+          showError('goals', 'You can select up to 3 goals maximum');
+          return;
+        }
+        selectedGoals.push(goalId);
+        element.classList.add('selected');
+      } else {
+        selectedGoals.splice(index, 1);
+        element.classList.remove('selected');
+        hideError('goals');
+      }
+      
+      if (selectedGoals.length <= 3) {
+        hideError('goals');
+      }
+    }
+
+    // Error helper displays
+    function showError(field, message) {
+      const errorSpan = document.getElementById(`error-${field}`);
+      if (errorSpan) {
+        if (message) errorSpan.innerText = message;
+        errorSpan.classList.add('visible');
+      }
+      
+      const groupDiv = document.getElementById(`group-${field}`);
+      if (groupDiv) {
+        groupDiv.classList.add('shake');
+        setTimeout(() => groupDiv.classList.remove('shake'), 300);
+      }
+    }
+
+    function hideError(field) {
+      const errorSpan = document.getElementById(`error-${field}`);
+      if (errorSpan) {
+        errorSpan.classList.remove('visible');
+      }
+    }
+
+    // Toggle register / login layout state
+    function toggleMode() {
+      isRegisterMode = !isRegisterMode;
+      const card = document.getElementById('formCard');
+      card.classList.add('shake');
+      setTimeout(() => card.classList.remove('shake'), 300);
+
+      // Clean inputs
+      document.getElementById('fullName').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('confirmPassword').value = '';
+      
+      // Clean errors
+      document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('visible'));
+      
+      // Reset strength meter
+      updateStrengthMeter(0);
+
+      if (isRegisterMode) {
+        // Show Register Card
+        document.getElementById('progressBarContainer').style.display = 'flex';
+        document.getElementById('paneTitle').innerText = 'Create Your Account';
+        document.getElementById('paneSubtitle').innerText = 'Begin your journey in the AI podcast intelligence ecosystem.';
+        document.getElementById('group-fullName').style.display = 'flex';
+        document.getElementById('group-confirmPassword').style.display = 'flex';
+        document.getElementById('passwordStrengthBox').style.display = 'flex';
+        document.getElementById('btnNext').innerText = 'Next';
+        document.getElementById('togglePrompt').innerHTML = 'Already have an account? <a onclick="toggleMode()">Sign In</a>';
+      } else {
+        // Show Login Card
+        document.getElementById('progressBarContainer').style.display = 'none';
+        document.getElementById('paneTitle').innerText = 'Welcome Back';
+        document.getElementById('paneSubtitle').innerText = 'Sign in to access your AI podcast dashboard insights.';
+        document.getElementById('group-fullName').style.display = 'none';
+        document.getElementById('group-confirmPassword').style.display = 'none';
+        document.getElementById('passwordStrengthBox').style.display = 'none';
+        document.getElementById('btnNext').innerText = 'Sign In';
+        document.getElementById('togglePrompt').innerHTML = 'Need an account? <a onclick="toggleMode()">Sign Up</a>';
+      }
+    }
+
+    // Slide step transitions handler
+    function goToStep(nextStep, direction = 'forward') {
+      const currentPane = document.querySelector(`.step-pane[data-step="${currentStep}"]`);
+      const nextPane = document.querySelector(`.step-pane[data-step="${nextStep}"]`);
+      
+      if (!currentPane || !nextPane) return;
+      
+      // Start sliding out current
+      currentPane.style.position = 'absolute';
+      currentPane.style.pointerEvents = 'none';
+      
+      if (direction === 'forward') {
+        currentPane.style.transform = 'translateX(-80px)';
+        nextPane.style.transform = 'translateX(80px)';
+      } else {
+        currentPane.style.transform = 'translateX(80px)';
+        nextPane.style.transform = 'translateX(-80px)';
+      }
+      currentPane.style.opacity = '0';
+      
+      setTimeout(() => {
+        currentPane.classList.remove('active');
+      }, 400);
+
+      // Setup next pane
+      nextPane.classList.add('active');
+      nextPane.offsetHeight; // trigger browser reflow
+      
+      nextPane.style.transform = 'translateX(0)';
+      nextPane.style.opacity = '1';
+      nextPane.style.position = 'relative';
+      nextPane.style.pointerEvents = 'auto';
+
+      currentStep = nextStep;
+      updateProgressBar();
+    }
+
+    // Step indicators updating
+    function updateProgressBar() {
+      const fill = document.getElementById('progressBarFill');
+      const indicators = [
+        document.getElementById('stepIndicator-1'),
+        document.getElementById('stepIndicator-2'),
+        document.getElementById('stepIndicator-3'),
+        document.getElementById('stepIndicator-4')
+      ];
+
+      // Update fill percentage
+      const fillPercent = ((currentStep - 1) / 3) * 100 + 25;
+      fill.style.width = `${Math.min(fillPercent, 100)}%`;
+
+      // Update steps status CSS classes
+      for (let i = 0; i < 4; i++) {
+        const stepNum = i + 1;
+        indicators[i].classList.remove('active', 'completed');
+        
+        if (stepNum === currentStep) {
+          indicators[i].classList.add('active');
+        } else if (stepNum < currentStep) {
+          indicators[i].classList.add('completed');
+        }
+      }
+
+      // Manage navigation button visibilities
+      const btnBack = document.getElementById('btnBack');
+      const btnNext = document.getElementById('btnNext');
+      const actionsPanel = document.getElementById('actionsPanel');
+
+      if (currentStep === 1) {
+        btnBack.style.visibility = 'hidden';
+        btnNext.innerText = 'Next';
+      } else if (currentStep === 4) {
+        // Success panel has custom inside triggers
+        actionsPanel.style.display = 'none';
+        document.getElementById('togglePrompt').style.display = 'none';
+        triggerConfetti();
+      } else {
+        btnBack.style.visibility = 'visible';
+        btnNext.innerText = 'Next';
+      }
+    }
+
+    // Steps validations & next logic
+    function handleNext() {
+      if (!isRegisterMode) {
+        handleSignIn();
+        return;
+      }
+
+      // Registration steps logic
+      if (currentStep === 1) {
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const pwd = document.getElementById('password').value;
+        const confirmPwd = document.getElementById('confirmPassword').value;
+        
+        let isValid = true;
+
+        if (!name) {
+          showError('fullName', 'Full Name is required');
+          isValid = false;
+        } else {
+          hideError('fullName');
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          showError('email', 'A valid email address is required');
+          isValid = false;
+        } else {
+          hideError('email');
+        }
+
+        if (pwd.length < 8) {
+          showError('password', 'Password must be at least 8 characters long');
+          isValid = false;
+        } else {
+          hideError('password');
+        }
+
+        if (pwd !== confirmPwd) {
+          showError('confirmPassword', 'Confirm password does not match password');
+          isValid = false;
+        } else {
+          hideError('confirmPassword');
+        }
+
+        if (isValid) {
+          // Double check email uniqueness in local storage users
+          const users = JSON.parse(localStorage.getItem('podcastmind_users') || '[]');
+          const emailExists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+          if (emailExists) {
+            showError('email', 'This email is already registered. Sign in instead.');
+            return;
+          }
+          goToStep(2, 'forward');
+        }
+
+      } else if (currentStep === 2) {
+        let isValid = true;
+        if (!selectedRole) {
+          showError('role', 'Please select a role to continue');
+          isValid = false;
+        } else {
+          hideError('role');
+        }
+
+        if (selectedCategories.length === 0) {
+          showError('categories', 'Select at least one category');
+          isValid = false;
+        } else {
+          hideError('categories');
+        }
+
+        if (isValid) {
+          goToStep(3, 'forward');
+        }
+
+      } else if (currentStep === 3) {
+        let isValid = true;
+        if (selectedGoals.length === 0) {
+          showError('goals', 'Please select at least one goal');
+          isValid = false;
+        } else if (selectedGoals.length > 3) {
+          showError('goals', 'You can select up to 3 goals maximum');
+          isValid = false;
+        } else {
+          hideError('goals');
+        }
+
+        const whyChose = document.getElementById('whyChose').value.trim();
+        if (!whyChose) {
+          showError('whyChose', 'Please write a short description');
+          isValid = false;
+        } else {
+          hideError('whyChose');
+        }
+
+        if (isValid) {
+          saveAndCompleteRegistration();
+        }
+      }
+    }
+
+    // Go back step
+    function handleBack() {
+      if (currentStep > 1) {
+        goToStep(currentStep - 1, 'backward');
+      }
+    }
+
+    // Save user record and proceed to Success Page
+    async function saveAndCompleteRegistration() {
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const whyChose = document.getElementById('whyChose').value.trim();
+
+      try {
+        const res = await fetch('http://localhost:8000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName: name, email, password })
+        });
+        
+        const data = await res.json();
+        if (res.ok && data.success) {
+          // Store token in session
+          const session = {
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role || 'Creator',
+            token: data.token
+          };
+          localStorage.setItem('podcastmind_session', JSON.stringify(session));
+
+          // Dynamic header firstName extract
+          const firstName = name.split(' ')[0];
+          document.getElementById('welcomeUserHeader').innerText = `Welcome, ${firstName}! 🎉`;
+
+          // Navigate to Success Step
+          goToStep(4, 'forward');
+        } else {
+          showError('email', data.detail || 'Registration failed. Please try again.');
+        }
+      } catch (err) {
+        console.error('Registration failed', err);
+        showError('email', 'Could not connect to authentication server.');
+      }
+    }
+
+    // Returning user sign-in process
+    async function handleSignIn() {
+      const email = document.getElementById('email').value.trim();
+      const pwd = document.getElementById('password').value;
+      
+      let isValid = true;
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        showError('email', 'A valid email is required');
+        isValid = false;
+      } else {
+        hideError('email');
+      }
+
+      if (!pwd) {
+        showError('password', 'Password is required');
+        isValid = false;
+      } else {
+        hideError('password');
+      }
+
+      if (!isValid) return;
+
+      try {
+        const res = await fetch('http://localhost:8000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password: pwd })
+        });
+        
+        const data = await res.json();
+        if (res.ok && data.success) {
+          // Set session parameters
+          const session = {
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role || 'Creator',
+            token: data.token
+          };
+          localStorage.setItem('podcastmind_session', JSON.stringify(session));
+
+          // Create overlay and show positive notifications
+          const firstName = data.user.name.split(' ')[0];
+          showLoginOverlay(`Welcome Back, ${firstName}! <br/><span style="font-size: 14px; font-weight: 500; color: var(--success); margin-top: 10px; display: inline-block;">✅ You can now upload your podcast</span>`);
+          
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        } else {
+          // Display validation errors on login card
+          showError('password', data.detail || 'Invalid email or password. Please try again.');
+        }
+      } catch (err) {
+        console.error('Sign in failed', err);
+        showError('password', 'Could not connect to authentication server.');
+      }
+    }
+
+    // Dynamic overlay for returning user success state
+    function showLoginOverlay(messageText) {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100vw';
+      overlay.style.height = '100vh';
+      overlay.style.backgroundColor = 'rgba(13, 13, 18, 0.95)';
+      overlay.style.zIndex = '999';
+      overlay.style.display = 'flex';
+      overlay.style.flexDirection = 'column';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.opacity = '0';
+      overlay.style.transition = 'opacity 0.4s ease';
+
+      overlay.innerHTML = `
+        <div style="background: rgba(19, 19, 26, 0.65); border: 1px solid rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; text-align: center; max-width: 480px; width: 90%; backdrop-filter: blur(12px);">
+          <div style="width: 64px; height: 64px; border-radius: 20px; background: rgba(0, 229, 160, 0.1); border: 1px solid rgba(0,229,160,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 0 20px rgba(0,229,160,0.2);">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width: 32px; height:32px; color: var(--success);" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 style="font-family: var(--font-heading); font-size: 22px; font-weight: 700; color: white; line-height: 1.4;">${messageText}</h2>
+          <div style="margin-top: 24px; display: flex; justify-content: center; gap: 8px;">
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary); animation: bounce 0.6s infinite alternate;"></div>
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--secondary); animation: bounce 0.6s 0.2s infinite alternate;"></div>
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: bounce 0.6s 0.4s infinite alternate;"></div>
+          </div>
+        </div>
+        <style>
+          @keyframes bounce { to { transform: translateY(-8px); } }
+        </style>
+      `;
+
+      document.body.appendChild(overlay);
+      
+      // Fade-in overlay
+      overlay.offsetHeight; // trigger browser reflow
+      overlay.style.opacity = '1';
+    }
+
+    // Finalize registration step logic
+    function completeRegistration(triggerUploadFlow) {
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      
+      // Auto-login active session setup
+      const session = {
+        name,
+        email,
+        role: selectedRole
+      };
+      localStorage.setItem('podcastmind_session', JSON.stringify(session));
+
+      if (triggerUploadFlow) {
+        // Store visual triggers flag
+        localStorage.setItem('podcastmind_upload_on_init', 'true');
+      }
+
+      window.location.href = '/';
+    }
+
+    // Pure CSS/Canvas confetti drop animation generator
+    function triggerConfetti() {
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      
+      // Resize canvas size
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+
+      const colors = ['#7B5EFF', '#FF5E9C', '#00E5A0', '#FF8C42', '#3B82F6', '#F59E0B'];
+      const particles = [];
+
+      for (let i = 0; i < 120; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 4 + 3,
+          d: Math.random() * canvas.height,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          tilt: Math.random() * 10 - 5,
+          tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+          tiltAngle: 0
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        particles.forEach((p, idx) => {
+          p.tiltAngle += p.tiltAngleIncremental;
+          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+          p.x += Math.sin(p.tiltAngle);
+          p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+          ctx.beginPath();
+          ctx.lineWidth = p.r * 2;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+          ctx.stroke();
+        });
+
+        updateParticles();
+      }
+
+      function updateParticles() {
+        let remaining = false;
+        particles.forEach(p => {
+          if (p.y < canvas.height) {
+            remaining = true;
+          }
+        });
+
+        if (remaining) {
+          requestAnimationFrame(draw);
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+  </script>
+</body>
+</html>

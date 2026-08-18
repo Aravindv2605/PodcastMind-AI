@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-white antialiased selection:bg-primary/30 selection:text-white font-sans;
+    background-color: #0D0D12;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: rgba(19, 19, 26, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-card-hover {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  .glass-card-hover:hover {
+    border-color: rgba(123, 94, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(123, 94, 255, 0.08), 0 0 15px rgba(123, 94, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .glass-card-hover-pink:hover {
+    border-color: rgba(255, 94, 156, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(255, 94, 156, 0.08), 0 0 15px rgba(255, 94, 156, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .neon-border {
+    border-image: linear-gradient(135deg, #7B5EFF, #FF5E9C) 1;
+  }
+
+  .neon-text-purple {
+    text-shadow: 0 0 10px rgba(123, 94, 255, 0.5);
+  }
+
+  .neon-text-pink {
+    text-shadow: 0 0 10px rgba(255, 94, 156, 0.5);
+  }
+
+  /* Custom Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: rgba(13, 13, 18, 0.5);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: rgba(123, 94, 255, 0.2);
+    border-radius: 9999px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(123, 94, 255, 0.4);
+  }
+}
+
+/* Keyframes for neural nodes and waveforms */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+@keyframes voiceWave {
+  0%, 100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.voice-bar {
+  transform-origin: bottom;
+  animation: voiceWave 1.2s infinite ease-in-out;
+}
+
+.voice-bar:nth-child(2n) {
+  animation-delay: 0.15s;
+}
+
+.voice-bar:nth-child(3n) {
+  animation-delay: 0.3s;
+}
+
+.voice-bar:nth-child(4n) {
+  animation-delay: 0.45s;
+}
+
+/* Custom 3D Card Flip styling */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Custom visual mind map tree styling */
+.mindmap-tree-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.mindmap-node-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.mindmap-children-container {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2rem;
+  position: relative;
+  padding-top: 2rem;
+  justify-content: center;
+}
+
+/* Vertical line pointing down from parent card */
+.mindmap-node-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -2rem;
+  left: 50%;
+  width: 2px;
+  height: 2rem;
+  background: rgba(123, 94, 255, 0.3); /* Neon primary line */
+  box-shadow: 0 0 8px rgba(123, 94, 255, 0.4);
+  z-index: 1;
+}
+
+/* If a node has no children, is collapsed, or children are hidden, hide the line pointing down */
+.mindmap-node-wrapper.no-children::after,
+.mindmap-node-wrapper.collapsed::after {
+  display: none;
+}
+
+/* Horizontal connector line on children row */
+.mindmap-child-branch {
+  position: relative;
+  padding-top: 2rem;
+}
+
+.mindmap-child-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(123, 94, 255, 0.3);
+  box-shadow: 0 0 6px rgba(123, 94, 255, 0.2);
+}
+
+/* Short vertical line down to child card */
+.mindmap-child-branch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 2rem;
+  background: rgba(123, 94, 255, 0.3);
+  box-shadow: 0 0 8px rgba(123, 94, 255, 0.4);
+  transform: translateX(-50%);
+}
+
+/* Remove horizontal line extensions for first and last siblings */
+.mindmap-child-branch:first-child::before {
+  left: 50%;
+  width: 50%;
+}
+
+.mindmap-child-branch:last-child::before {
+  right: 50%;
+  width: 50%;
+}
+
+/* If there is only one child, remove horizontal lines completely */
+.mindmap-child-branch:only-child::before {
+  display: none;
+}
+
