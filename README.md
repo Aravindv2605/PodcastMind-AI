@@ -47,15 +47,15 @@ PodcastMind AI is a dark-theme intelligence dashboard designed to turn standard 
 TERMINAL 1 - BACKEND:
 
 cd C:\Projects\PodcastMind-AI\backend
-
+```bash
 python -m uvicorn app.main:app --reload --port 8000
-
+ ```
 
 TERMINAL 2 - FRONTEND:
 
 cd C:\Projects\PodcastMind-AI\frontend
-
+```bash
 npm run dev
-
+ ```
 
 Keep BOTH terminals running.
