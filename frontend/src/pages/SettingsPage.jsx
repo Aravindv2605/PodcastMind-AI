@@ -6,9 +6,9 @@ import { User, Bell, Cpu, Globe2, Link2, HardDrive, CreditCard, Trash2, ShieldAl
 export default function SettingsPage() {
   const { setIsApiConfigModalOpen, avatar, setAvatar, showToast } = usePodcast();
   const sessionData = localStorage.getItem("podcastmind_session");
-  const session = sessionData ? JSON.parse(sessionData) : { name: "Sarah Chen", email: "sarah.chen@podcastmind.ai" };
-  const [name, setName] = useState(session.name || "Sarah Chen");
-  const [email, setEmail] = useState(session.email || "sarah.chen@podcastmind.ai");
+  const session = sessionData ? JSON.parse(sessionData) : { name: "Aravindhan", email: "aravindhan@example.com" };
+  const [name, setName] = useState(session.name || "Aravindhan");
+  const [email, setEmail] = useState(session.email || "aravindhan@example.com");
   const [bio, setBio] = useState("AI Researcher & Technology Creator");
 
   const fileInputRef = useRef(null);

@@ -632,7 +632,7 @@ export const PodcastProvider = ({ children }) => {
     setUserRoleState(role);
     if (typeof window !== "undefined") {
       const sessionData = localStorage.getItem("podcastmind_session");
-      let session = { name: "Sarah Chen", email: "sarah.chen@podcastmind.ai", role: "Creator" };
+      let session = { name: "Aravindhan", email: "aravindhan@example.com", role: "Creator" };
       if (sessionData) {
         try {
           session = JSON.parse(sessionData);
@@ -663,7 +663,7 @@ export const PodcastProvider = ({ children }) => {
     setAvatarState(newAvatar);
     if (typeof window !== "undefined") {
       const sessionData = localStorage.getItem("podcastmind_session");
-      let session = { name: "Sarah Chen", email: "sarah.chen@podcastmind.ai", role: "Creator" };
+      let session = { name: "Aravindhan", email: "aravindhan@example.com", role: "Creator" };
       if (sessionData) {
         try {
           session = JSON.parse(sessionData);

@@ -56,7 +56,7 @@ async def seed_database_if_empty():
         if user_count == 0:
             from app.utils.auth import hash_password
             default_user = {
-                "fullName": "Aravindhan V",
+                "fullName": "Aravindhan",
                 "email": "aravindhan@example.com",
                 "passwordHash": hash_password("password123"),
                 "role": "Creator",

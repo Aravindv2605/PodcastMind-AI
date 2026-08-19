@@ -43,7 +43,7 @@ export default function Navbar() {
 
   // Retrieve user session dynamically
   const sessionData = localStorage.getItem('podcastmind_session');
-  const session = sessionData ? JSON.parse(sessionData) : { name: "Sarah Chen", email: "sarah.chen@podcastmind.ai", role: "Creator" };
+  const session = sessionData ? JSON.parse(sessionData) : { name: "Aravindhan", email: "aravindhan@example.com", role: "Creator" };
 
   const handleLogout = () => {
     localStorage.removeItem('podcastmind_session');
